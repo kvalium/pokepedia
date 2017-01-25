@@ -16,7 +16,7 @@
             </thead>
         {% for result in searchResults %}
             <tr>
-                <td><a href="{{ path('pokemon_details', {'pattern':result}) }}">{{ result|capitalize }}</a></td>
+                <td><a href="{{ path('pokemon_details', {'name': result}) }}">{{ result|capitalize }}</a></td>
             </tr>
         {% endfor %}
         </table>

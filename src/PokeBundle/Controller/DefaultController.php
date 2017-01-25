@@ -75,10 +75,18 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/details/{{name}}", name="pokemon_details")
+     * @Route("/details/{name}", name="pokemon_details")
      */
     public function detailsActions($name)
     {
-
+        // @todo use service to get Pokemon data
+        $pokemonData = array(
+            'name' => $name
+        );
+        return $this->render('PokeBundle:full:pokemon_details.html.twig',
+            array(
+                'pokemonData' => $pokemonData
+            )
+        );
     }
 }
