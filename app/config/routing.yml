@@ -1,0 +1,7 @@
+#poke:
+#    resource: "@PokeBundle/Resources/config/routing.yml"
+#    prefix:   /
+
+poke:
+    resource: "@PokeBundle/Controller/"
+    type:     annotation
