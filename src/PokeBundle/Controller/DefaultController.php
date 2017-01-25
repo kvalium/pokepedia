@@ -13,16 +13,6 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $api = new PokeApi;
-
-
-        $redis = $this->get('snc_redis.default');
-
-        // @todo move this to warmup command
-//        $pokedex = json_decode($api->pokedex(1));
-//        foreach($pokedex->pokemon_entries as $pokemon_entry){
-//            $redis->set($pokemon_entry->pokemon_species->name,$pokemon_entry->pokemon_species->name);
-//        };
         return $this->render('PokeBundle:Default:index.html.twig');
     }
     /**
@@ -30,7 +20,7 @@ class DefaultController extends Controller
      */
     public function searchAction($pattern){
         $redis = $this->get('snc_redis.default');
-        dump($redis->keys($pattern.'*'));
+        var_dump($redis->keys($pattern.'*'));
         return $this->render('PokeBundle:Default:index.html.twig');
     }
 }
