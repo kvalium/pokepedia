@@ -1,0 +1,24 @@
+{% extends 'PokeBundle::base.html.twig' %}
+{% block title %}
+    Welcome!
+{% endblock %}
+
+{% block content %}
+
+    <h1>Search Results</h1>
+
+    {% if searchResults is defined %}
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+            </thead>
+        {% for result in searchResults %}
+            <tr>
+                <td><a href="{{ path('pokemon_details', {'pattern':result}) }}">{{ result|capitalize }}</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

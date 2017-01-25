@@ -4,5 +4,6 @@
 {% endblock %}
 
 {% block content %}
-Hello World! 2
+<h1>Search a Pokemon!</h1>
+    {% include '@Poke/parts/search_form.html.twig' with{'form':form} only %}
 {% endblock %}
