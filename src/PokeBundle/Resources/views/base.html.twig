@@ -14,7 +14,16 @@
 </head>
 <body>
 
-{% block content %}{% endblock %}
+<div class="header">
+
+{% block header %}
+{% include '@Poke/parts/header.html.twig' only %}
+{% endblock %}
+</div>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
 
 {% javascripts '@jquery' '@bootstrap_js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>

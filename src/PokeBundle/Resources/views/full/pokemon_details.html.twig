@@ -1,8 +1,12 @@
 {% extends 'PokeBundle::base.html.twig' %}
 {% block title %}
-    Pokepedia: {{ pokemonData.name|humanize }}
+    Pokepedia: {{ name|humanize }}
 {% endblock %}
 
 {% block content %}
-    <h1>{{ pokemonData.name|humanize }}</h1>
+    <h1>{{ name|humanize }}</h1>
+
+    <img src="{{ sprites.default }}">
+
+    <p>Weigth: {{ weight }}</p>
 {% endblock %}

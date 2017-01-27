@@ -2,6 +2,7 @@
 
 namespace PokeBundle\Controller;
 
+use PokeBundle\Services\PokeService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -30,7 +31,7 @@ class DefaultController extends Controller
             if ($data['name']) {
                 return $this->redirect($this->generateUrl(
                     'search_results',
-                    array('pattern' => $data['name'])
+                    array('pattern' => strtolower($data['name']))
                 ));
             }
         }
@@ -60,7 +61,7 @@ class DefaultController extends Controller
     /**
      * Search Results page action
      *
-     * @Route("/search/{pattern}", name="search_results")
+     * @Route("/search/{pattern}", name="search_results", requirements={"pattern": "[a-z]+"})
      * @param $pattern
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -83,9 +84,17 @@ class DefaultController extends Controller
         $pokemonData = array(
             'name' => $name
         );
+        /** @var PokeService $pokeService */
+        $pokeService = $this->get('poke.service');
+
+        /** Pokemon $pokemon */
+        $pokemon = $pokeService->getPokemonData(5);
+
         return $this->render('PokeBundle:full:pokemon_details.html.twig',
             array(
-                'pokemonData' => $pokemonData
+                'weight' => $pokemon->getWeight(),
+                'name' => $pokemon->getName(),
+                'sprites' => $pokemon->getSprites()
             )
         );
     }
