@@ -5,5 +5,5 @@
 
 {% block content %}
 <h1>Search a Pokemon!</h1>
-    {% include '@Poke/parts/search_form.html.twig' with{'form':form} only %}
+    {{ render(controller('PokeBundle:Default:renderSearchForm' )) }}
 {% endblock %}

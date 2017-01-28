@@ -10,7 +10,7 @@
     {% if pokemon.types is defined and pokemon.types is not empty %}
         <div>
             {% for type in pokemon.types %}
-                {{ type|humanize }}
+                <span class="label {{ type }}-type">{{ type|humanize }}</span>
             {% endfor %}
         </div>
     {% endif %}
@@ -22,7 +22,11 @@
     {% include '@Poke/parts/base_stats.html.twig' with {'pokemon': pokemon, 'stats': pokemon.stats} only %}
 
     {#Pokemon stat charts#}
-    {% include '@Poke/parts/stat_chart.html.twig' with {'statNames': pokemon.stats, 'chartData': compareStats} only %}
+    {% include '@Poke/parts/stat_chart.html.twig' with {
+        'name': pokemon.name,
+        'statNames': pokemon.stats,
+        'chartData': compareStats
+    } only %}
 
 
     {#Pokemon Twitter Timeline#}

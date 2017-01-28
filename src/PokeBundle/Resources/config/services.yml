@@ -1,5 +1,5 @@
 services:
     poke.service:
         class: PokeBundle\Services\PokeService
-        arguments: ['@endroid.twitter', '@snc_redis.default', '%redis.databases%']
+        arguments: ['@endroid.twitter', '@snc_redis.default', '%pokepedia%']
 

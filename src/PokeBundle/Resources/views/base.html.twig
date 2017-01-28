@@ -9,7 +9,10 @@
     <title>{% spaceless %}{% block title %}{% endblock %} {% endspaceless %}</title>
 
     {% block stylesheets %}
-        {% stylesheets '@bootstrap_css' %}
+        {% stylesheets
+        '@bootstrap_css'
+        'bundles/poke/css/pokepedia.css'
+        %}
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"/>
         {% endstylesheets %}
         <link rel="stylesheet" type="text/css" media="screen"

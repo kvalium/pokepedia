@@ -2,14 +2,12 @@
 
 namespace PokeBundle\Controller;
 
-use Buzz\Message\Response;
-use Endroid\Twitter\Twitter;
 use PokeBundle\Services\PokeService;
 use Predis\Client;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,12 +19,27 @@ class DefaultController extends Controller
 
     /**
      * @Route("/", name="home")
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
+        return $this->render('PokeBundle:full:index.html.twig');
+    }
 
+    public function renderSearchFormAction()
+    {
+        return $this->render('PokeBundle:parts:search_form.html.twig', array(
+            'form' => $this->getSearchForm()->createView()
+        ));
+    }
+
+    /**
+     * @Route("search",name="search_handler")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function handleSearchAction(Request $request)
+    {
         $form = $this->getSearchForm();
         $form->handleRequest($request);
 
@@ -39,9 +52,7 @@ class DefaultController extends Controller
                 ));
             }
         }
-        return $this->render('PokeBundle:full:index.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->redirect($this->generateUrl('home'));
     }
 
     /**
@@ -51,10 +62,10 @@ class DefaultController extends Controller
     private function getSearchForm()
     {
         if (!isset($this->searchForm)) {
-            $defaultData = array('message' => 'Type your message here');
             /** @var Form $form */
-            $form = $this->createFormBuilder($defaultData)
-                ->add('name', TextType::class)
+            $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('search_handler'))
+                ->add('name', SearchType::class, array('required' => 'true', 'trim' => true))
                 ->add('send', SubmitType::class, array('label' => 'Search'))
                 ->getForm();
             return $form;
@@ -76,6 +87,7 @@ class DefaultController extends Controller
         return $this->render('PokeBundle:full:search_results.html.twig',
             array(
                 'searchResults' => $redis->keys($pattern . '*'),
+                'pattern' => $pattern
             )
         );
     }

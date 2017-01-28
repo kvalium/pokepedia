@@ -45,7 +45,7 @@ class PokedexUpdateCommand extends ContainerAwareCommand
 
         $this->io->section('Fetching remote Pokedex');
 
-        $pokedexID = $this->getContainer()->getParameter('pokedex')['id'];
+        $pokedexID = $this->getContainer()->getParameter('pokepedia')['pokedex']['id'];
         $pokedex = $pokeService->getPokedex($pokedexID);
         $nbRemotePokedex = count($pokedex->pokemon_entries);
 
@@ -64,7 +64,7 @@ class PokedexUpdateCommand extends ContainerAwareCommand
 
         // Fetching remote pokedex then store Pokemon names
         $toIndex = array();
-        $this->redis->select($this->getContainer()->getParameter('redis.databases')['pokemons']);
+        $this->redis->select($this->getContainer()->getParameter('pokepedia')['redis.databases']['pokemons']);
         foreach ($pokedex->pokemon_entries as $i => $pokemon_entry) {
             $pokemonName = $pokemon_entry->pokemon_species->name;
             if (!$this->redis->exists($pokemonName)) {
@@ -106,7 +106,7 @@ class PokedexUpdateCommand extends ContainerAwareCommand
     protected function loadTypeStats()
     {
         $this->typeStats = array();
-        $this->redis->select($this->getContainer()->getParameter('redis.databases')['types']);
+        $this->redis->select($this->getContainer()->getParameter('pokepedia')['redis.databases']['types']);
         foreach ($this->redis->keys('*') as $typeKey) {
             foreach ($this->redis->hgetall($typeKey) as $stat => $value) {
                 $this->typeStats[$typeKey][$stat] = $value;
@@ -156,7 +156,7 @@ class PokedexUpdateCommand extends ContainerAwareCommand
         }
         $this->io->newLine();
         $this->io->section('Appending Redis');
-        $this->redis->select($this->getContainer()->getParameter('redis.databases')['pokemons']);
+        $this->redis->select($this->getContainer()->getParameter('pokepedia')['redis.databases']['pokemons']);
         $this->io->progressStart(count($toIndex));
         foreach ($toIndex as $pokemonName => $baseData) {
             $baseData['likes'] = 0;
@@ -176,7 +176,7 @@ class PokedexUpdateCommand extends ContainerAwareCommand
      */
     protected function storeTypeStates()
     {
-        $this->redis->select($this->getContainer()->getParameter('redis.databases')['types']);
+        $this->redis->select($this->getContainer()->getParameter('pokepedia')['redis.databases']['types']);
 
         $tableOutput = array();
         foreach ($this->typeStats as $statName => $stats) {
