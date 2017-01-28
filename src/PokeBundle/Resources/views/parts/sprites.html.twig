@@ -1,0 +1,25 @@
+{% if sprites is defined and sprites is not empty %}
+    {% set genderNumber = sprites|length %}
+
+    {% set genderFa = ['venus-mars'] %}
+    {% if genderNumber == 2 %}
+        {% set genderFa = ['mars', 'venus'] %}
+    {% endif %}
+
+    <div class="row">
+        {% for gender,genderSprites in sprites %}
+            <div class="col-md-{{ 12 / genderNumber }}">
+                <div class="col-md-12 text-center">
+                    <i class="fa fa-{{ genderFa[loop.index0] }} fa-3x" aria-hidden="true"></i>
+                </div>
+                <div class="row">
+                    {% for name,sprite in genderSprites %}
+                        <div class="col-md-6 text-center">
+                            <img src="{{ sprite }}" alt="pokemon {{ name }}">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

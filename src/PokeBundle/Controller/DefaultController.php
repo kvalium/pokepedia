@@ -2,12 +2,16 @@
 
 namespace PokeBundle\Controller;
 
+use Buzz\Message\Response;
+use Endroid\Twitter\Twitter;
 use PokeBundle\Services\PokeService;
+use Predis\Client;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
@@ -67,6 +71,7 @@ class DefaultController extends Controller
      */
     public function searchAction($pattern)
     {
+        /** @var Client $redis */
         $redis = $this->get('snc_redis.default');
         return $this->render('PokeBundle:full:search_results.html.twig',
             array(
@@ -80,22 +85,35 @@ class DefaultController extends Controller
      */
     public function detailsActions($name)
     {
-        // @todo use service to get Pokemon data
-        $pokemonData = array(
-            'name' => $name
-        );
+        /** @var Client $redis */
+        $redis = $this->get('snc_redis.default');
+        $pokemonID = $redis->hget($name, 'id');
+
         /** @var PokeService $pokeService */
         $pokeService = $this->get('poke.service');
 
         /** Pokemon $pokemon */
-        $pokemon = $pokeService->getPokemonData(5);
+        $pokemon = $pokeService->getPokemonData($pokemonID);
+
 
         return $this->render('PokeBundle:full:pokemon_details.html.twig',
             array(
-                'weight' => $pokemon->getWeight(),
-                'name' => $pokemon->getName(),
-                'sprites' => $pokemon->getSprites()
+                'pokemon' => $pokemon,
+                'compareStats' => $pokeService->getCompareStats($pokemon)
             )
         );
+    }
+
+    /**
+     * @Route("/tweets/{name}", name="pokemon_twitter_timeline")
+     */
+    public function twitterTimelineAction(Request $request, $name)
+    {
+        /** @var PokeService $pokeService */
+        $pokeService = $this->get('poke.service');
+        $statuses = $pokeService->getPokemonTimeline($name);
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse($statuses);
+        }
     }
 }

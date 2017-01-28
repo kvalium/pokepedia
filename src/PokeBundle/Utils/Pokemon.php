@@ -15,6 +15,8 @@ class Pokemon
     private $baseExperience;
     private $weight;
     private $name;
+    private $ID;
+    private $height;
 
     /**
      * Pokemon constructor.
@@ -23,8 +25,10 @@ class Pokemon
     public function __construct($payload)
     {
         $this->payload = $payload;
+        $this->ID = $payload['id'];
         $this->name = $payload['name'];
         $this->weight = $payload['weight'];
+        $this->height = $payload['height'];
         $this->baseExperience = $payload['base_experience'];
     }
 
@@ -37,11 +41,23 @@ class Pokemon
     }
 
     /**
+     * Returns Pokemon Weight in kilograms
+     *
      * @return mixed
      */
     public function getWeight()
     {
-        return $this->weight;
+        return $this->weight / 10;
+    }
+
+    /**
+     * Returns Pokemon Height in meters
+     *
+     * @return mixed
+     */
+    public function getHeight()
+    {
+        return $this->height / 10;
     }
 
     /**
@@ -50,6 +66,15 @@ class Pokemon
     public function getName()
     {
         return $this->name;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getID()
+    {
+        return $this->ID;
     }
 
 
@@ -89,10 +114,21 @@ class Pokemon
     public function getSprites()
     {
         $sprites = $this->payload['sprites'];
-        return array(
-            "default" => $sprites['front_default'],
-            "female" => $sprites['front_female']
+        $pokeSprites = array();
+        $pokeSprites['default'] = array(
+            "front" => $sprites['front_default'],
+            "back" => $sprites['back_default'],
         );
+
+        // append female sprites if defined
+        if(isset($sprites['front_female'])){
+            $pokeSprites['female'] = array(
+                "front" => $sprites['front_female'],
+                "back" => $sprites['back_female'],
+            );
+        }
+
+        return $pokeSprites;
     }
 
 }

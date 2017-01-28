@@ -1,12 +1,37 @@
 {% extends 'PokeBundle::base.html.twig' %}
 {% block title %}
-    Pokepedia: {{ name|humanize }}
+    Pokepedia: {{ pokemon.name|humanize }}
 {% endblock %}
 
 {% block content %}
-    <h1>{{ name|humanize }}</h1>
+    <h1>Pokepedia entry #{{ pokemon.ID }}: {{ pokemon.name|humanize }}</h1>
 
-    <img src="{{ sprites.default }}">
+    {# Types #}
+    {% if pokemon.types is defined and pokemon.types is not empty %}
+        <div>
+            {% for type in pokemon.types %}
+                {{ type|humanize }}
+            {% endfor %}
+        </div>
+    {% endif %}
 
-    <p>Weigth: {{ weight }}</p>
+    {# Sprites #}
+    {% include '@Poke/parts/sprites.html.twig' with {'sprites': pokemon.sprites} only %}
+
+    {#Base Stats#}
+    {% include '@Poke/parts/base_stats.html.twig' with {'pokemon': pokemon, 'stats': pokemon.stats} only %}
+
+    {#Pokemon stat charts#}
+    {% include '@Poke/parts/stat_chart.html.twig' with {'statNames': pokemon.stats, 'chartData': compareStats} only %}
+
+
+    {#Pokemon Twitter Timeline#}
+    {% include '@Poke/parts/twitter_timeline.html.twig' with {'name': pokemon.name} only %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/vendor/chart.js/dist/Chart.js') }}"></script>
+    <script src="{{ asset('bundles/poke/js/pokemon_twitter.js') }}"></script>
 {% endblock %}

@@ -4,9 +4,10 @@ Pokemon stats based upon [pokeAPI](http://pokeapi.co/)
  
 ## Technical stack
 
-* **Symfony3**
-* **Redis**
-* **[PokePHP](https://github.com/danrovito/pokephp)** PokeAPI PHP wrapper
+* Symfony 3
+* Redis
+* [Chart.js](http://www.chartjs.org/)
+* [PokePHP](https://github.com/danrovito/pokephp) PokeAPI PHP wrapper
 
 ## Installation
 
@@ -14,6 +15,7 @@ Pokemon stats based upon [pokeAPI](http://pokeapi.co/)
 
 * [Symfony3 requirements](http://symfony.com/doc/current/reference/requirements.html)
 * Redis
+* bower
 
 ### Define Pokedex
 

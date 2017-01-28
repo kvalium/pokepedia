@@ -1,0 +1,22 @@
+{
+  "name": "pokepedia",
+  "homepage": "https://github.com/kvalium/pokepedia",
+  "authors": [
+    "KValium <julien.monchany@gmail.com>"
+  ],
+  "description": "pokepedia bower dependencies",
+  "main": "bower.json",
+  "license": "GPLv3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "web/assets/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "chart.js": "^2.4.0",
+    "font-awesome": "fontawesome#^4.7.0"
+  }
+}

@@ -1,0 +1,15 @@
+
+<canvas id="myChart" width="100" height="100"></canvas>
+
+<script src="{{ asset('assets/vendor/chart.js/dist/Chart.js') }}"></script>
+<script>
+
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: {{ statNames|keys|json_encode|raw }},
+            datasets: {{ chartData|json_encode|raw }}
+        }
+    });
+</script>

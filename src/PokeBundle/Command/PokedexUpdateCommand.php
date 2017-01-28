@@ -71,7 +71,9 @@ class PokedexUpdateCommand extends ContainerAwareCommand
                 $output->writeln('[' . ($i + 1) . '/' . $nbRemotePokedex . '] fetching pokemon: ' . $pokemonName);
                 /** @var Pokemon $pokemon */
                 $pokemon = $pokeService->getPokemonData($pokemon_entry->entry_number);
-                $toIndex[] = $pokemon->getName();
+                $toIndex[$pokemon->getName()] = array(
+                    'id' => $pokemon->getID()
+                );
                 $this->gatherTypeStats($pokemon);
             }
         };
@@ -152,13 +154,14 @@ class PokedexUpdateCommand extends ContainerAwareCommand
         if (!$toIndex) {
             return false;
         }
-        dump($toIndex);
         $this->io->newLine();
         $this->io->section('Appending Redis');
         $this->redis->select($this->getContainer()->getParameter('redis.databases')['pokemons']);
         $this->io->progressStart(count($toIndex));
-        foreach ($toIndex as $pokemonName) {
-            $this->redis->setnx($pokemonName, 0);
+        foreach ($toIndex as $pokemonName => $baseData) {
+            $baseData['likes'] = 0;
+            $baseData['dislikes'] = 0;
+            $this->redis->hmset($pokemonName, $baseData);
             $this->io->progressAdvance();
         }
         $this->io->progressFinish();
@@ -177,9 +180,11 @@ class PokedexUpdateCommand extends ContainerAwareCommand
 
         $tableOutput = array();
         foreach ($this->typeStats as $statName => $stats) {
-            $this->redis->hmset($statName, $stats);
-            array_unshift($stats, $statName);
-            $tableOutput[] = $stats;
+            $avgStats = $this->calculateAvgStats($stats);
+
+            $this->redis->hmset($statName, $avgStats);
+            array_unshift($avgStats, $statName);
+            $tableOutput[] = $avgStats;
         }
 
         $this->io->table(
@@ -189,4 +194,26 @@ class PokedexUpdateCommand extends ContainerAwareCommand
 
     }
 
+    /**
+     * Calculate stat average for each Pokemon type
+     *
+     * @param $stats
+     * @return array|bool
+     */
+    protected function calculateAvgStats($stats){
+        if($total = $stats['total']) {
+            $avgStats = array();
+            foreach ($stats as $name => $stat) {
+                if ($name == 'total') {
+                    $avgStats['total'] = $stat;
+                    continue;
+                }
+                $avgStats[$name] = round($stat / $total);
+            }
+
+            return $avgStats;
+        }
+
+        return false;
+    }
 }

@@ -5,10 +5,16 @@
 
 {% block content %}
 
-    <h1>Search Results</h1>
+    {% set nbResults = searchResults|length %}
+    <h1>
+        {% transchoice nbResults %}
+        {0} No results!|{1} One result|]1,Inf[ %nbResults% results
+        {% endtranschoice %}
+    </h1>
 
-    {% if searchResults is defined %}
-        <table>
+
+    {% if searchResults is not empty %}
+        <table class="table table-striped">
             <thead>
             <tr>
                 <th>Name</th>
@@ -16,7 +22,7 @@
             </thead>
         {% for result in searchResults %}
             <tr>
-                <td><a href="{{ path('pokemon_details', {'name': result}) }}">{{ result|capitalize }}</a></td>
+                <td><a href="{{ path('pokemon_details', {'name': result}) }}">{{ result|humanize }}</a></td>
             </tr>
         {% endfor %}
         </table>

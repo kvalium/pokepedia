@@ -14,6 +14,13 @@ parameters:
         pokemons: 0
         types: 1
 
+# Endroid Twitter params
+endroid_twitter:
+    consumer_key: '%consumer_key%'
+    consumer_secret: '%consumer_secret%'
+    access_token: '%access_token%'
+    access_token_secret: '%access_token_secret%'
+
 framework:
     #esi:             ~
     #translator:      { fallbacks: ["%locale%"] }
