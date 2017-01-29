@@ -17,3 +17,10 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+    
+    # Twitter API data
+    consumer_key: twitterDevKey
+    consumer_secret: twitterDevKeySecret
+    access_token: twitterToken
+    access_token_secret: twitterTokenSecret
+
