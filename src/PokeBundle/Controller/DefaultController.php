@@ -34,7 +34,25 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("search",name="search_handler")
+     * Will redirect to a randomly chosen Pokemon's page
+     *
+     * @Route("random", name="get_random_pokemon")
+     */
+    public function getRandomPokemonAction()
+    {
+        $pokeService = $this->get('poke.service');
+
+        $randomPokemon = $pokeService->getRandomPokemon();
+        return $this->render('PokeBundle:full:pokemon_details.html.twig',
+            array(
+                'pokemon' => $randomPokemon,
+                'compareStats' => $pokeService->getCompareStats($randomPokemon)
+            )
+        );
+    }
+
+    /**
+     * @Route("dosearch",name="search_handler")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -45,12 +63,14 @@ class DefaultController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            $params = array();
             if ($data['name']) {
-                return $this->redirect($this->generateUrl(
-                    'search_results',
-                    array('pattern' => strtolower($data['name']))
-                ));
+                $params = array('pattern' => strtolower($data['name']));
             }
+            return $this->redirect($this->generateUrl(
+                'search_results', $params
+
+            ));
         }
         return $this->redirect($this->generateUrl('home'));
     }
@@ -65,7 +85,7 @@ class DefaultController extends Controller
             /** @var Form $form */
             $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('search_handler'))
-                ->add('name', SearchType::class, array('required' => 'true', 'trim' => true))
+                ->add('name', SearchType::class, array('required' => false, 'trim' => true))
                 ->add('send', SubmitType::class, array('label' => 'Search'))
                 ->getForm();
             return $form;
@@ -80,7 +100,7 @@ class DefaultController extends Controller
      * @param $pattern
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchAction($pattern)
+    public function searchAction($pattern = '*')
     {
         /** @var Client $redis */
         $redis = $this->get('snc_redis.default');
@@ -100,6 +120,10 @@ class DefaultController extends Controller
         /** @var Client $redis */
         $redis = $this->get('snc_redis.default');
         $pokemonID = $redis->hget($name, 'id');
+
+        if (!$pokemonID) {
+            throw new \Exception('unable to find a Pokemon');
+        }
 
         /** @var PokeService $pokeService */
         $pokeService = $this->get('poke.service');

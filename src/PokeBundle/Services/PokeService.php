@@ -39,10 +39,14 @@ class PokeService
      *
      * @param int $pokemonID
      * @return Pokemon
+     * @throws \Exception
      */
     public function getPokemonData($pokemonID)
     {
         $payload = json_decode($this->api->pokemon($pokemonID), true);
+        if (!is_array($payload)) {
+            throw new \Exception('PokeAPI returns the following error: ' . $payload);
+        }
         /** @var Pokemon $pokemon */
         $pokemon = new Pokemon($payload);
         return $pokemon;
@@ -69,14 +73,18 @@ class PokeService
     {
         $tweetIDs = array();
 
+        $tweeterParams = array(
+            'q' => '#' . $name . ' filter:safe',
+            'count' => 12
+        );
+
         /** @var Response $search */
-        if($search = $this->twitter->query('search/tweets', 'GET', 'json', array('q' => '#'.$name))){
+        if ($search = $this->twitter->query('search/tweets', 'GET', 'json', $tweeterParams)) {
             $results = json_decode($search->getContent(), true);
-            foreach($results['statuses'] as $status){
+            foreach ($results['statuses'] as $status) {
                 $tweetIDs[] = $status['id_str'];
             }
         }
-
         return $tweetIDs;
     }
 
@@ -100,11 +108,13 @@ class PokeService
 
         // get all types
         $typeNames = $this->redis->keys('*');
-        foreach($typeNames as $typeName){
+        foreach ($typeNames as $typeName) {
             $typeStats = $this->redis->hgetall($typeName);
             $typeStatsClean = array();
-            foreach($typeStats as $stateName => $statValue){
-                if($stateName == 'total'){ continue; }
+            foreach ($typeStats as $stateName => $statValue) {
+                if ($stateName == 'total') {
+                    continue;
+                }
                 $typeStatsClean[] = (int)$statValue;
             }
 
@@ -122,14 +132,20 @@ class PokeService
         return $fullStats;
     }
 
-    private function hexToRgbaColor($hex, $rgbaOpacity = 0.2){
-        $hex = str_replace('#','',$hex);
-        $hexParts = str_split($hex,2);
+    public function getRandomPokemon()
+    {
+        // @TODO
+    }
+
+    private function hexToRgbaColor($hex, $rgbaOpacity = 0.2)
+    {
+        $hex = str_replace('#', '', $hex);
+        $hexParts = str_split($hex, 2);
         $rgba = array();
-        foreach($hexParts as $hexPart){
+        foreach ($hexParts as $hexPart) {
             $rgba[] = hexdec($hexPart);
         }
         $rgba[] = $rgbaOpacity;
-        return 'rgba(' . implode(',',$rgba) .')';
+        return 'rgba(' . implode(',', $rgba) . ')';
     }
 }

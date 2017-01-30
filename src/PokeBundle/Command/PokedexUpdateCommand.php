@@ -66,9 +66,18 @@ class PokedexUpdateCommand extends ContainerAwareCommand
         $toIndex = array();
         $this->redis->select($this->getContainer()->getParameter('pokepedia')['redis.databases']['pokemons']);
         foreach ($pokedex->pokemon_entries as $i => $pokemon_entry) {
+//            if($i >= 20){
+//                continue;
+//            }
             $pokemonName = $pokemon_entry->pokemon_species->name;
             if (!$this->redis->exists($pokemonName)) {
                 $output->writeln('[' . ($i + 1) . '/' . $nbRemotePokedex . '] fetching pokemon: ' . $pokemonName);
+
+                if(!isset($pokemon_entry->entry_number)){
+                    $this->io->error('Error on Pokemon #'. $pokemon_entry->entry_number);
+                    continue;
+                }
+
                 /** @var Pokemon $pokemon */
                 $pokemon = $pokeService->getPokemonData($pokemon_entry->entry_number);
                 $toIndex[$pokemon->getName()] = array(
