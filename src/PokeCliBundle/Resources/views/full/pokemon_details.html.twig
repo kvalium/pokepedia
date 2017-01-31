@@ -1,4 +1,4 @@
-{% extends 'PokeBundle::base.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block title %}
     Pokepedia: {{ pokemon.name|humanize }}
 {% endblock %}
@@ -16,13 +16,13 @@
     {% endif %}
 
     {# Sprites #}
-    {% include '@Poke/parts/sprites.html.twig' with {'sprites': pokemon.sprites} only %}
+    {% include '@PokeCli/parts/sprites.html.twig' with {'sprites': pokemon.sprites} only %}
 
     {#Base Stats#}
-    {% include '@Poke/parts/base_stats.html.twig' with {'pokemon': pokemon, 'stats': pokemon.stats} only %}
+    {% include '@PokeCli/parts/base_stats.html.twig' with {'pokemon': pokemon, 'stats': pokemon.stats} only %}
 
     {#Pokemon stat charts#}
-    {% include '@Poke/parts/stat_chart.html.twig' with {
+    {% include '@PokeCli/parts/stat_chart.html.twig' with {
         'name': pokemon.name,
         'statNames': pokemon.stats,
         'chartData': compareStats
@@ -30,12 +30,12 @@
 
 
     {#Pokemon Twitter Timeline#}
-    {% include '@Poke/parts/twitter_timeline.html.twig' with {'name': pokemon.name} only %}
+    {% include '@PokeCli/parts/twitter_timeline.html.twig' with {'name': pokemon.name} only %}
 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('assets/vendor/chart.js/dist/Chart.js') }}"></script>
-    <script src="{{ asset('bundles/poke/js/pokemon_twitter.js') }}"></script>
+    <script src="{{ asset('bundles/pokecli/js/pokemon_twitter.js') }}"></script>
 {% endblock %}

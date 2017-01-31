@@ -1,10 +1,10 @@
 <?php
 
-namespace PokeBundle\Services;
+namespace PokeRestBundle\Services;
 
 use Buzz\Message\Response;
 use Endroid\Twitter\Twitter;
-use PokeBundle\Utils\Pokemon;
+use PokeRestBundle\Utils\Pokemon;
 use PokePHP\PokeApi;
 use Predis\Client;
 

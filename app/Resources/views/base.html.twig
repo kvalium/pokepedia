@@ -1,13 +1,38 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <title>{% spaceless %}{% block title %}{% endblock %} {% endspaceless %}</title>
+
+    {% block stylesheets %}
+        {% stylesheets
+        '@bootstrap_css'
+        'bundles/pokecli/css/pokepedia.css'
+        %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"/>
+        {% endstylesheets %}
+        <link rel="stylesheet" type="text/css" media="screen"
+              href="{{ asset('assets/vendor/font-awesome/css/font-awesome.min.css') }}"/>
+    {% endblock %}
+</head>
+<body>
+<div class="header">
+    {% block header %}
+        {% include '@PokeCli/parts/header.html.twig' only %}
+    {% endblock %}
+</div>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+{% block javascripts %}
+    <script src="{{ asset('assetic/jquery.js') }}"></script>
+    <script src="{{ asset('assetic/bootstrap_js.js') }}"></script>
+{% endblock %}
+</body>
 </html>

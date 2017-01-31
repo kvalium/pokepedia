@@ -1,10 +1,10 @@
 <?php
 
 
-namespace PokeBundle\Controller;
+namespace PokeRestBundle\Controller;
 
-use PokeBundle\Services\PokeService;
-use PokeBundle\Utils\Pokemon;
+use PokeRestBundle\Services\PokeService;
+use PokeRestBundle\Utils\Pokemon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;

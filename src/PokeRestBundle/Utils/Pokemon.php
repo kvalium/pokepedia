@@ -1,6 +1,6 @@
 <?php
 
-namespace PokeBundle\Utils;
+namespace PokeRestBundle\Utils;
 
 
 class Pokemon

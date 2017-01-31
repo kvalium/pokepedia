@@ -1,9 +1,9 @@
 <?php
 
-namespace PokeBundle;
+namespace PokeCliBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class PokeBundle extends Bundle
+class PokeCliBundle extends Bundle
 {
 }

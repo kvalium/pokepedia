@@ -1,17 +1,18 @@
 <?php
 
-namespace PokeBundle\Controller;
+namespace PokeCliBundle\Controller;
 
-use PokeBundle\Services\PokeService;
+use PokeRestBundle\Services\PokeService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 
+
 use Symfony\Component\HttpFoundation\Request;
 
-class DefaultController extends Controller
+class CliController extends Controller
 {
     /** @var  Form $searchForm */
     private $searchForm;
@@ -22,15 +23,16 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('PokeBundle:full:index.html.twig');
+        return $this->render('PokeCliBundle:full:index.html.twig');
     }
 
     public function renderSearchFormAction()
     {
-        return $this->render('PokeBundle:parts:search_form.html.twig', [
+        return $this->render('PokeCliBundle:parts:search_form.html.twig', [
             'form' => $this->getSearchForm()->createView()
         ]);
     }
+
 
     /**
      * Returns the search form instance or create it
@@ -61,7 +63,7 @@ class DefaultController extends Controller
 
         $randomPokemon = $pokeService->getRandomPokemon();
 
-        return $this->render('PokeBundle:full:pokemon_details.html.twig',
+        return $this->render('PokeCliBundle:full:pokemon_details.html.twig',
             [
                 'pokemon' => $randomPokemon,
                 'compareStats' => $pokeService->getCompareStats($randomPokemon)
@@ -104,7 +106,7 @@ class DefaultController extends Controller
         /** @var PokeService $pokeService */
         $pokeService = $this->get('poke.service');
 
-        return $this->render('PokeBundle:full:search_results.html.twig',
+        return $this->render('PokeCliBundle:full:search_results.html.twig',
             ['results' => $pokeService->search($pattern)]
         );
     }
@@ -130,7 +132,7 @@ class DefaultController extends Controller
         $pokemon = $pokeService->getPokemonData($pokemonID);
 
 
-        return $this->render('PokeBundle:full:pokemon_details.html.twig',
+        return $this->render('PokeCliBundle:full:pokemon_details.html.twig',
             [
                 'pokemon' => $pokemon,
                 'compareStats' => $pokeService->getCompareStats($pokemon)

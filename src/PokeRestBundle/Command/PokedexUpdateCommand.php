@@ -18,9 +18,9 @@
  *
  */
 
-namespace PokeBundle\Command;
+namespace PokeRestBundle\Command;
 
-use PokeBundle\Services\PokeService;
+use PokeRestBundle\Services\PokeService;
 use PokeBundle\Utils\Pokemon;
 use Predis\Client as PredisClient;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

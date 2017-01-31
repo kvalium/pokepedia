@@ -18,7 +18,8 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Endroid\Twitter\Bundle\EndroidTwitterBundle(),
             new Snc\RedisBundle\SncRedisBundle(),
-            new PokeBundle\PokeBundle(),
+            new PokeRestBundle\PokeRestBundle(),
+            new PokeCliBundle\PokeCliBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
