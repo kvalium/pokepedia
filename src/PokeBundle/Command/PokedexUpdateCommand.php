@@ -1,5 +1,23 @@
 <?php
 
+/***
+ * POKEDEX UPDATE COMMAND
+ * ======================
+ *
+ * Update the Local Pokedex
+ *
+ * This command aims to update the local Pokedex from data coming from the PokeService to speed-up front operations
+ * such as searches and compute average stats for each type of Pokemon (eg. Fire, Poison).
+ * Data is stored on two Redis indexes:
+ * - Pokemons: stores Pokemon Names, Ids, Likes and Dislikes
+ * - Stats: stores average type stats
+ * option flush will truncate both indexes before launching the sync.
+ *
+ * USAGE: from the project root:
+ * $ bin/console pokedex:update [--flush]
+ *
+ */
+
 namespace PokeBundle\Command;
 
 use PokeBundle\Services\PokeService;
@@ -63,26 +81,23 @@ class PokedexUpdateCommand extends ContainerAwareCommand
         }
 
         // Fetching remote pokedex then store Pokemon names
-        $toIndex = array();
+        $toIndex = [];
         $this->redis->select($this->getContainer()->getParameter('pokepedia')['redis.databases']['pokemons']);
         foreach ($pokedex->pokemon_entries as $i => $pokemon_entry) {
-//            if($i >= 20){
-//                continue;
-//            }
             $pokemonName = $pokemon_entry->pokemon_species->name;
             if (!$this->redis->exists($pokemonName)) {
                 $output->writeln('[' . ($i + 1) . '/' . $nbRemotePokedex . '] fetching pokemon: ' . $pokemonName);
 
-                if(!isset($pokemon_entry->entry_number)){
-                    $this->io->error('Error on Pokemon #'. $pokemon_entry->entry_number);
+                if (!isset($pokemon_entry->entry_number)) {
+                    $this->io->error('Error on Pokemon #' . $pokemon_entry->entry_number);
                     continue;
                 }
 
                 /** @var Pokemon $pokemon */
                 $pokemon = $pokeService->getPokemonData($pokemon_entry->entry_number);
-                $toIndex[$pokemon->getName()] = array(
+                $toIndex[$pokemon->getName()] = [
                     'id' => $pokemon->getID()
-                );
+                ];
                 $this->gatherTypeStats($pokemon);
             }
         };
@@ -114,7 +129,7 @@ class PokedexUpdateCommand extends ContainerAwareCommand
      */
     protected function loadTypeStats()
     {
-        $this->typeStats = array();
+        $this->typeStats = [];
         $this->redis->select($this->getContainer()->getParameter('pokepedia')['redis.databases']['types']);
         foreach ($this->redis->keys('*') as $typeKey) {
             foreach ($this->redis->hgetall($typeKey) as $stat => $value) {
@@ -131,12 +146,12 @@ class PokedexUpdateCommand extends ContainerAwareCommand
     protected function gatherTypeStats(Pokemon $pokemon)
     {
         if (!$this->typeStats) {
-            $this->typeStats = array();
+            $this->typeStats = [];
         }
 
         foreach ($pokemon->getTypes() as $type) {
             if (!isset($this->typeStats[$type])) {
-                $this->typeStats[$type] = array('total' => 0);
+                $this->typeStats[$type] = ['total' => 0];
             }
             $this->typeStats[$type]['total']++;
             foreach ($pokemon->getStats() as $stat => $value) {
@@ -187,7 +202,7 @@ class PokedexUpdateCommand extends ContainerAwareCommand
     {
         $this->redis->select($this->getContainer()->getParameter('pokepedia')['redis.databases']['types']);
 
-        $tableOutput = array();
+        $tableOutput = [];
         foreach ($this->typeStats as $statName => $stats) {
             $avgStats = $this->calculateAvgStats($stats);
 
@@ -197,7 +212,7 @@ class PokedexUpdateCommand extends ContainerAwareCommand
         }
 
         $this->io->table(
-            array('STAT', '#', 'SPD', 'S-DEF', 'S-ATT', 'DEF', 'ATT', 'HP'),
+            ['STAT', '#', 'SPD', 'S-DEF', 'S-ATT', 'DEF', 'ATT', 'HP'],
             $tableOutput
         );
 
@@ -209,9 +224,10 @@ class PokedexUpdateCommand extends ContainerAwareCommand
      * @param $stats
      * @return array|bool
      */
-    protected function calculateAvgStats($stats){
-        if($total = $stats['total']) {
-            $avgStats = array();
+    protected function calculateAvgStats($stats)
+    {
+        if ($total = $stats['total']) {
+            $avgStats = [];
             foreach ($stats as $name => $stat) {
                 if ($name == 'total') {
                     $avgStats['total'] = $stat;

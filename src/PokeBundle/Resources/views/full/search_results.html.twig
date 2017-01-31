@@ -5,7 +5,7 @@
 
 {% block content %}
 
-    {% set nbResults = searchResults|length %}
+    {% set nbResults = results.count %}
     <h1>
         {% transchoice nbResults %}
         {0} No results!|{1} One result|]1,Inf[ %nbResults% results
@@ -13,14 +13,14 @@
     </h1>
 
 
-    {% if searchResults is not empty %}
+    {% if results.results is not empty %}
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>Name</th>
             </tr>
             </thead>
-        {% for result in searchResults %}
+        {% for result in results.results %}
             <tr>
                 <td><a href="{{ path('pokemon_details', {'name': result}) }}">{{ result|humanize }}</a></td>
             </tr>

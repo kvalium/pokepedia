@@ -27,8 +27,8 @@ $(document).ready(function () {
         var pokemonName = $(pokeContainer).attr('id');
 
         // get latests tweets
-        $.ajax('/tweets/' + pokemonName).done(function(tweets){
-            $.each(tweets, addTweet);
+        $.ajax('/api/pokemon/tweets/' + pokemonName).done(function(tweets){
+            $.each(tweets.tweets, addTweet);
         });
     }
 });

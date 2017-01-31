@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kvalium
- * Date: 26/01/17
- * Time: 21:00
- */
 
 namespace PokeBundle\Utils;
 
@@ -85,7 +79,7 @@ class Pokemon
      */
     public function getTypes()
     {
-        $types = array();
+        $types = [];
         foreach ($this->payload['types'] as $type) {
             $types[] = $type['type']['name'];
         }
@@ -99,7 +93,7 @@ class Pokemon
      */
     public function getStats()
     {
-        $stats = array();
+        $stats = [];
         foreach ($this->payload['stats'] as $stat) {
             $stats[$stat['stat']['name']] = $stat['base_stat'];
         }
@@ -114,18 +108,18 @@ class Pokemon
     public function getSprites()
     {
         $sprites = $this->payload['sprites'];
-        $pokeSprites = array();
-        $pokeSprites['default'] = array(
+        $pokeSprites = [];
+        $pokeSprites['default'] = [
             "front" => $sprites['front_default'],
             "back" => $sprites['back_default'],
-        );
+        ];
 
         // append female sprites if defined
-        if(isset($sprites['front_female'])){
-            $pokeSprites['female'] = array(
+        if (isset($sprites['front_female'])) {
+            $pokeSprites['female'] = [
                 "front" => $sprites['front_female'],
                 "back" => $sprites['back_female'],
-            );
+            ];
         }
 
         return $pokeSprites;

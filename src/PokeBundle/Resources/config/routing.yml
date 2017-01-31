@@ -1,3 +1,10 @@
 poke_homepage:
     path:     /
-    defaults: { _controller: PokeBundle:Default:index }
+    type:     annotations
+    resource: PokeBundle\Controller\DefaultController
+
+poke_rest:
+    path: /api/
+    type:     rest
+    resource: PokeBundle\Controller\RestController
+

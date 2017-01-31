@@ -3,13 +3,12 @@
 namespace PokeBundle\Controller;
 
 use PokeBundle\Services\PokeService;
-use Predis\Client;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\JsonResponse;
+
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
@@ -28,9 +27,27 @@ class DefaultController extends Controller
 
     public function renderSearchFormAction()
     {
-        return $this->render('PokeBundle:parts:search_form.html.twig', array(
+        return $this->render('PokeBundle:parts:search_form.html.twig', [
             'form' => $this->getSearchForm()->createView()
-        ));
+        ]);
+    }
+
+    /**
+     * Returns the search form instance or create it
+     * @return Form
+     */
+    private function getSearchForm()
+    {
+        if (!isset($this->searchForm)) {
+            /** @var Form $form */
+            $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('search_handler'))
+                ->add('name', SearchType::class, ['required' => false, 'trim' => true])
+                ->add('send', SubmitType::class, ['label' => 'Search'])
+                ->getForm();
+            return $form;
+        }
+        return $this->searchForm;
     }
 
     /**
@@ -43,11 +60,12 @@ class DefaultController extends Controller
         $pokeService = $this->get('poke.service');
 
         $randomPokemon = $pokeService->getRandomPokemon();
+
         return $this->render('PokeBundle:full:pokemon_details.html.twig',
-            array(
+            [
                 'pokemon' => $randomPokemon,
                 'compareStats' => $pokeService->getCompareStats($randomPokemon)
-            )
+            ]
         );
     }
 
@@ -63,34 +81,15 @@ class DefaultController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $params = array();
+            $params = [];
             if ($data['name']) {
-                $params = array('pattern' => strtolower($data['name']));
+                $params = ['pattern' => strtolower($data['name'])];
             }
             return $this->redirect($this->generateUrl(
                 'search_results', $params
-
             ));
         }
         return $this->redirect($this->generateUrl('home'));
-    }
-
-    /**
-     * Returns the search form instance or create it
-     * @return Form
-     */
-    private function getSearchForm()
-    {
-        if (!isset($this->searchForm)) {
-            /** @var Form $form */
-            $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('search_handler'))
-                ->add('name', SearchType::class, array('required' => false, 'trim' => true))
-                ->add('send', SubmitType::class, array('label' => 'Search'))
-                ->getForm();
-            return $form;
-        }
-        return $this->searchForm;
     }
 
     /**
@@ -102,54 +101,40 @@ class DefaultController extends Controller
      */
     public function searchAction($pattern = '*')
     {
-        /** @var Client $redis */
-        $redis = $this->get('snc_redis.default');
+        /** @var PokeService $pokeService */
+        $pokeService = $this->get('poke.service');
+
         return $this->render('PokeBundle:full:search_results.html.twig',
-            array(
-                'searchResults' => $redis->keys($pattern . '*'),
-                'pattern' => $pattern
-            )
+            ['results' => $pokeService->search($pattern)]
         );
     }
 
     /**
      * @Route("/details/{name}", name="pokemon_details")
+     * @param $name
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      */
     public function detailsActions($name)
     {
-        /** @var Client $redis */
-        $redis = $this->get('snc_redis.default');
-        $pokemonID = $redis->hget($name, 'id');
+
+        /** @var PokeService $pokeService */
+        $pokeService = $this->get('poke.service');
+        $pokemonID = $pokeService->getPokemonIdFromName($name);
 
         if (!$pokemonID) {
             throw new \Exception('unable to find a Pokemon');
         }
-
-        /** @var PokeService $pokeService */
-        $pokeService = $this->get('poke.service');
 
         /** Pokemon $pokemon */
         $pokemon = $pokeService->getPokemonData($pokemonID);
 
 
         return $this->render('PokeBundle:full:pokemon_details.html.twig',
-            array(
+            [
                 'pokemon' => $pokemon,
                 'compareStats' => $pokeService->getCompareStats($pokemon)
-            )
+            ]
         );
-    }
-
-    /**
-     * @Route("/tweets/{name}", name="pokemon_twitter_timeline")
-     */
-    public function twitterTimelineAction(Request $request, $name)
-    {
-        /** @var PokeService $pokeService */
-        $pokeService = $this->get('poke.service');
-        $statuses = $pokeService->getPokemonTimeline($name);
-        if ($request->isXmlHttpRequest()) {
-            return new JsonResponse($statuses);
-        }
     }
 }
