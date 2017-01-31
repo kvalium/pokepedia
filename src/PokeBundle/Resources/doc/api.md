@@ -2,7 +2,7 @@
 
 ## GET methods
 
-#### /api/pokemon/popularity/{name}
+### /api/pokemon/popularity/{name}
 
 Returns the popularity of the Pokemon (ie. likes and dislikes)
 
@@ -18,8 +18,8 @@ Returns the popularity of the Pokemon (ie. likes and dislikes)
 }
 ```
 
-#### /api/pokemon/random
-Returs a random Pokemon 
+### /api/pokemon/random
+Returns a random Pokemon 
 
 `GET /api/pokemon/random`
 ```
@@ -54,7 +54,7 @@ Returs a random Pokemon
 }
 ```
 
-#### /api/pokemon/details/{name}
+### /api/pokemon/details/{name}
 
 Returns data for the the given Pokemon name.
 
@@ -90,7 +90,7 @@ Returns data for the the given Pokemon name.
 }
 ```
 
-#### /api/types
+### /api/types
 
 Returns average stats for each Pokemon Type.
 
@@ -131,7 +131,7 @@ Returns average stats for each Pokemon Type.
 }
 ```
 
-#### /api/search/{pattern}
+### /api/search/{pattern}
 
 Returns search results for the given pattern. 
 
@@ -156,7 +156,7 @@ Note: "*" search will returns all results.
 }
 ```
 
-#### /api/pokemon/tweets/{name}
+### /api/pokemon/tweets/{name}
 Returns the latests tweet IDs related the the given Pokemon name.
 
 
@@ -183,7 +183,7 @@ Returns the latests tweet IDs related the the given Pokemon name.
 
 ## PUT methods
 
-#### /api/pokemon/like/{name}
+### /api/pokemon/like/{name}
 
 Increments the Likes counter for the given Pokemon
 
@@ -196,7 +196,7 @@ Increments the Likes counter for the given Pokemon
 ```
 
 
-#### /api/pokemon/dislike/{name}
+### /api/pokemon/dislike/{name}
 
 Increments the Dislikes counter for the given Pokemon
 
