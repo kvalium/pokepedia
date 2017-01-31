@@ -2,7 +2,7 @@
 
 This bundle provides various tools based upon the [pokeAPI](http://pokeapi.co/) and exposes a RESTful API.
 
-## API
+## Pokepedia API
 
 Please read the related [API documentation](Resources/doc/api.md).
 
