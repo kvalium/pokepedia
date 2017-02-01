@@ -7,7 +7,7 @@
 Returns the popularity of the Pokemon (ie. likes and dislikes)
 
 `GET /api/pokemon/popularity/poliwhirl`
-```
+```json
 {
     "pokemon": "poliwhirl",
     "popularity":
@@ -22,7 +22,7 @@ Returns the popularity of the Pokemon (ie. likes and dislikes)
 Returns a random Pokemon 
 
 `GET /api/pokemon/random`
-```
+```json
 {
     "baseExperience": 155,
     "weight": 38,
@@ -59,7 +59,7 @@ Returns a random Pokemon
 Returns data for the the given Pokemon name.
 
 `GET /api/pokemon/details/seel`
-```
+```json
 {
     "baseExperience": 65,
     "weight": 90,
@@ -95,7 +95,7 @@ Returns data for the the given Pokemon name.
 Returns average stats for each Pokemon Type.
 
 `GET /api/types`
-```
+```json
 {
     "water":
     {
@@ -138,7 +138,7 @@ Returns search results for the given pattern.
 Note: "*" search will returns all results.
 
 `GET /api/search/v`
-```
+```json
 {
     "pattern": "v",
     "count": 8,
@@ -161,7 +161,7 @@ Returns the latests tweet IDs related the the given Pokemon name.
 
 
 `GET /api/pokemon/tweets/blastoise`
-```
+```json
 {
     "pokemon": "blastoise",
     "tweets":
@@ -188,7 +188,7 @@ Returns the latests tweet IDs related the the given Pokemon name.
 Increments the Likes counter for the given Pokemon
 
 `PUT /api/pokemon/like/ditto`
-```
+```json
 {
     "name": "ditto",
     "likes": 3
@@ -201,7 +201,7 @@ Increments the Likes counter for the given Pokemon
 Increments the Dislikes counter for the given Pokemon
 
 `PUT /api/pokemon/dislike/golem`
-```
+```json
 {
     "name": "golem",
     "dislikes": 6

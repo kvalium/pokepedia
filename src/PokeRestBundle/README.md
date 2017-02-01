@@ -6,6 +6,13 @@ This bundle provides various tools based upon the [pokeAPI](http://pokeapi.co/) 
 
 Please read the related [API documentation](Resources/doc/api.md).
 
+## Technical stack
+
+* Symfony 3
+* Redis
+* [PokePHP](https://github.com/danrovito/pokephp) PokeAPI PHP wrapper
+* [TwitterBundle](endroid/EndroidTwitterBundle)
+
 ## Installation
 
 ### Prerequisites
@@ -31,7 +38,7 @@ Two indexes are used:
 2) **Stats** will gather Pokemon base stats (Speed, HP, etc.) and group them by [Pokemon type](http://bulbapedia.bulbagarden.net/wiki/Type).
 
 Initialization, update or truncate indexes is done with the following Symfony console command:
-```
+```bash
 $ bin/console pokedex:update [--flush]
 ```
 
@@ -65,6 +72,8 @@ Once indexes operations are over, computed type stats will be displayed.
   dragon     3    67    73      73      68    94    64  
  ---------- ---- ----- ------- ------- ----- ----- ---- 
 ```
+## Author
+Julien Monchany - julien.monchany@gmail.com
 
 ## Licence
 
