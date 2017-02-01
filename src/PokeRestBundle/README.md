@@ -11,7 +11,7 @@ Please read the related [API documentation](Resources/doc/api.md).
 * Symfony 3
 * Redis
 * [PokePHP](https://github.com/danrovito/pokephp) PokeAPI PHP wrapper
-* [TwitterBundle](endroid/EndroidTwitterBundle)
+* [TwitterBundle](https://github.com/endroid/EndroidTwitterBundle)
 
 ## Installation
 
