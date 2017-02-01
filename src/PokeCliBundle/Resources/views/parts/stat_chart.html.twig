@@ -1,10 +1,12 @@
-<h2>Stats Comparator</h2>
+<h2>{% trans %}Stats Comparator</h2>
 
 <p>
+    {% trans %}
     This graph compares {{ name|humanize }} base stats with average stats of Pokemon of the same type(s).
+    {% endtrans %}
 </p>
 <p>
-    You can also add / remove others types stats by clicking on the legend labels.
+    {% trans %}You can also add / remove others types stats by clicking on the legend labels.{% endtrans %}
 </p>
 
 <canvas height="200" id="myChart"></canvas>
@@ -15,7 +17,7 @@
     var myChart = new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: {{ statNames|keys|json_encode|raw }},
+            labels: {{ statNames|keys|json_encode|raw|trans }},
             datasets: {{ chartData|json_encode|raw }}
         },
         options: {

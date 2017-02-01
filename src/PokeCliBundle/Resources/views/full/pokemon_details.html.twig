@@ -4,13 +4,13 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Pokepedia entry #{{ pokemon.ID }}: {{ pokemon.name|humanize }}</h1>
+    <h1>{% trans %}Pokepedia entry{% endtrans %} #{{ pokemon.ID }}: {{ pokemon.name|humanize }}</h1>
 
     {# Types #}
     {% if pokemon.types is defined and pokemon.types is not empty %}
         <div>
             {% for type in pokemon.types %}
-                <span class="label {{ type }}-type">{{ type|humanize }}</span>
+                <span class="label {{ type }}-type">{{ type|humanize|trans }}</span>
             {% endfor %}
         </div>
     {% endif %}
@@ -23,7 +23,7 @@
 
     {#Pokemon stat charts#}
     {% include '@PokeCli/parts/stat_chart.html.twig' with {
-        'name': pokemon.name,
+        'name': pokemon.name|humanize,
         'statNames': pokemon.stats,
         'chartData': compareStats
     } only %}

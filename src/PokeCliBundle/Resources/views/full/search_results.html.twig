@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title %}
-    Welcome!
+    {% trans %}Pokepedia search results{% endtrans %}
 {% endblock %}
 
 {% block content %}
@@ -8,8 +8,9 @@
     {% set nbResults = results.count %}
     <h1>
         {% transchoice nbResults %}
-        {0} No results!|{1} One result|]1,Inf[ %nbResults% results
+        {0} No results!|{1} One result |]1,Inf[ %nbResults% results
         {% endtranschoice %}
+
     </h1>
 
 
@@ -17,7 +18,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>Name</th>
+                <th>{% trans %}Name{% endtrans %}</th>
             </tr>
             </thead>
         {% for result in results.results %}

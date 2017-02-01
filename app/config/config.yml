@@ -71,6 +71,7 @@ framework:
         log: true
     serializer:
         enabled: true
+    translator: { fallbacks: [en] }
 
 # FOS Rest Configuration
 fos_rest:

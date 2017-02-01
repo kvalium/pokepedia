@@ -4,19 +4,19 @@
             <h2>Data</h2>
             <table class="table table-striped">
                 <tr>
-                    <td>Pokedex #</td>
+                    <td>{% trans %}Pokedex #{% endtrans %}</td>
                     <td>{{ pokemon.iD }}</td>
                 </tr>
                 <tr>
-                    <td>Weight</td>
+                    <td>{% trans %}Weight{% endtrans %}</td>
                     <td>{{ pokemon.weight }} kg</td>
                 </tr>
                 <tr>
-                    <td>Height</td>
+                    <td>{% trans %}Height{% endtrans %}</td>
                     <td>{{ pokemon.height }} m</td>
                 </tr>
                 <tr>
-                    <td>Base XP</td>
+                    <td>{% trans %}Base XP{% endtrans %}</td>
                     <td>{{ pokemon.baseExperience }}</td>
                 </tr>
             </table>
@@ -25,11 +25,11 @@
 
     {% if stats is defined and stats is not empty %}
         <div class="col-md-6">
-            <h2>Stats</h2>
+            <h2>{% trans %}Stats{% endtrans %}</h2>
             <table class="table table-striped">
                 {% for statName, statVal in stats %}
                     <tr>
-                        <td>{{ statName|humanize }}</td>
+                        <td>{{ statName|humanize|trans }}</td>
                         <td>{{ statVal }}</td>
                     </tr>
                 {% endfor %}

@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block title %}
-    Welcome!
+    {% trans %}Welcome!{% endtrans %}
 {% endblock %}
 
 {% block content %}
-<h1>Search a Pokemon!</h1>
+<h1>{% trans %}Search a Pokemon!{% endtrans %}</h1>
     {{ render(controller('PokeCliBundle:Cli:renderSearchForm' )) }}
 {% endblock %}
