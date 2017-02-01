@@ -30,9 +30,10 @@ class RestController extends Controller
         if ($statuses = $pokeService->getPokemonTimeline($name)) {
             return [
                 'pokemon' => $name,
-                'tweets' => $statuses
+                'tweets' => $statuses,
             ];
         }
+
         return new JsonResponse(['message' => 'Pokemon not found'], Response::HTTP_NOT_FOUND);
     }
 
@@ -47,6 +48,7 @@ class RestController extends Controller
     {
         /** @var PokeService $pokeService */
         $pokeService = $this->get('poke.service');
+
         return $pokeService->getRandomPokemon();
     }
 
@@ -66,9 +68,10 @@ class RestController extends Controller
         if ($popularity = $pokeService->getPopularity($name)) {
             return [
                 'pokemon' => $name,
-                'popularity' => $popularity
+                'popularity' => $popularity,
             ];
         }
+
         return new JsonResponse(['message' => 'Pokemon not found'], Response::HTTP_NOT_FOUND);
     }
 
@@ -85,6 +88,7 @@ class RestController extends Controller
         if ($likes = $pokeService->addLike($name)) {
             return ['name' => $name, 'likes' => $likes];
         }
+
         return new JsonResponse(['message' => 'Pokemon not found'], Response::HTTP_NOT_FOUND);
     }
 
@@ -101,6 +105,7 @@ class RestController extends Controller
         if ($dislikes = $pokeService->addDislike($name)) {
             return ['name' => $name, 'dislikes' => $dislikes];
         }
+
         return new JsonResponse(['message' => 'Pokemon not found'], Response::HTTP_NOT_FOUND);
     }
 
@@ -116,6 +121,7 @@ class RestController extends Controller
     {
         /** @var PokeService $pokeService */
         $pokeService = $this->get('poke.service');
+
         return $pokeService->search($pattern);
     }
 

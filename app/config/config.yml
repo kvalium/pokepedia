@@ -104,6 +104,18 @@ snc_redis:
             alias: default
             dsn: redis://localhost
 
+## Guzzle Configuration
+guzzle:
+    # (de)activate logging/profiler; default: %kernel.debug%
+    logging: true
+
+    clients:
+        pokepedia:
+            base_url: "http://pokepedia.lxc/"
+            options:
+                timeout: 10
+                connect_timeout: 10
+
 # Assetic Configuration
 assetic:
     debug:          '%kernel.debug%'

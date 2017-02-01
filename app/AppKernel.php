@@ -17,6 +17,7 @@ class AppKernel extends Kernel
             new FOS\RestBundle\FOSRestBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Endroid\Twitter\Bundle\EndroidTwitterBundle(),
+            new EightPoints\Bundle\GuzzleBundle\GuzzleBundle(),
             new Snc\RedisBundle\SncRedisBundle(),
             new PokeRestBundle\PokeRestBundle(),
             new PokeCliBundle\PokeCliBundle(),

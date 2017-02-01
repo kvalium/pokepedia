@@ -2,15 +2,15 @@
 
 namespace PokeCliBundle\Controller;
 
-use PokeRestBundle\Services\PokeService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
+use PokeCliBundle\Services\PokeCliService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
-
-
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class CliController extends Controller
 {
@@ -28,11 +28,13 @@ class CliController extends Controller
 
     public function renderSearchFormAction()
     {
-        return $this->render('PokeCliBundle:parts:search_form.html.twig', [
-            'form' => $this->getSearchForm()->createView()
-        ]);
+        return $this->render(
+            'PokeCliBundle:parts:search_form.html.twig',
+            [
+                'form' => $this->getSearchForm()->createView(),
+            ]
+        );
     }
-
 
     /**
      * Returns the search form instance or create it
@@ -47,8 +49,10 @@ class CliController extends Controller
                 ->add('name', SearchType::class, ['required' => false, 'trim' => true])
                 ->add('send', SubmitType::class, ['label' => 'Search'])
                 ->getForm();
+
             return $form;
         }
+
         return $this->searchForm;
     }
 
@@ -59,14 +63,24 @@ class CliController extends Controller
      */
     public function getRandomPokemonAction()
     {
-        $pokeService = $this->get('poke.service');
+        /** @var PokeCliService $pokeService */
+        $pokeCliService = $this->get('pokecli.service');
+        /** @var Client $client */
+        $client = $this->get('guzzle.client.pokepedia');
+        /** @var Response $response */
+        $response = $client->get('/api/pokemon/random');
 
-        $randomPokemon = $pokeService->getRandomPokemon();
+        if (!$response->getStatusCode() === 200) {
+            throw new \Exception($response->getReasonPhrase());
+        }
 
-        return $this->render('PokeCliBundle:full:pokemon_details.html.twig',
+        $randomPokemon = json_decode($response->getBody()->getContents(), true);
+
+        return $this->render(
+            'PokeCliBundle:full:pokemon_details.html.twig',
             [
                 'pokemon' => $randomPokemon,
-                'compareStats' => $pokeService->getCompareStats($randomPokemon)
+                'compareStats' => $pokeCliService->getCompareStats($randomPokemon),
             ]
         );
     }
@@ -87,10 +101,15 @@ class CliController extends Controller
             if ($data['name']) {
                 $params = ['pattern' => strtolower($data['name'])];
             }
-            return $this->redirect($this->generateUrl(
-                'search_results', $params
-            ));
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'search_results',
+                    $params
+                )
+            );
         }
+
         return $this->redirect($this->generateUrl('home'));
     }
 
@@ -98,16 +117,26 @@ class CliController extends Controller
      * Search Results page action
      *
      * @Route("/search/{pattern}", name="search_results", requirements={"pattern": "[a-z]+"})
-     * @param $pattern
+     * @param string $pattern
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      */
     public function searchAction($pattern = '*')
     {
-        /** @var PokeService $pokeService */
-        $pokeService = $this->get('poke.service');
+        /** @var Client $client */
+        $client = $this->get('guzzle.client.pokepedia');
+        /** @var Response $response */
+        $response = $client->get('/api/search/'.$pattern);
 
-        return $this->render('PokeCliBundle:full:search_results.html.twig',
-            ['results' => $pokeService->search($pattern)]
+        if (!$response->getStatusCode() === 200) {
+            throw new \Exception($response->getReasonPhrase());
+        }
+
+        $results = json_decode($response->getBody()->getContents(), true);
+
+        return $this->render(
+            'PokeCliBundle:full:search_results.html.twig',
+            ['results' => $results]
         );
     }
 
@@ -119,23 +148,26 @@ class CliController extends Controller
      */
     public function detailsActions($name)
     {
+        /** @var PokeCliService $pokeService */
+        $pokeCliService = $this->get('pokecli.service');
 
-        /** @var PokeService $pokeService */
-        $pokeService = $this->get('poke.service');
-        $pokemonID = $pokeService->getPokemonIdFromName($name);
+        /** @var Client $client */
+        $client = $this->get('guzzle.client.pokepedia');
+        /** @var Response $response */
+        $response = $client->get('/api/pokemon/details/'.$name);
 
-        if (!$pokemonID) {
-            throw new \Exception('unable to find a Pokemon');
+        if (!$response->getStatusCode() === 200) {
+            throw new \Exception($response->getReasonPhrase());
         }
 
         /** Pokemon $pokemon */
-        $pokemon = $pokeService->getPokemonData($pokemonID);
+        $pokemon = json_decode($response->getBody()->getContents(), true);
 
-
-        return $this->render('PokeCliBundle:full:pokemon_details.html.twig',
+        return $this->render(
+            'PokeCliBundle:full:pokemon_details.html.twig',
             [
                 'pokemon' => $pokemon,
-                'compareStats' => $pokeService->getCompareStats($pokemon)
+                'compareStats' => $pokeCliService->getCompareStats($pokemon),
             ]
         );
     }

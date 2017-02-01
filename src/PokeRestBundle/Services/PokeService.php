@@ -4,8 +4,8 @@ namespace PokeRestBundle\Services;
 
 use Buzz\Message\Response;
 use Endroid\Twitter\Twitter;
-use PokeRestBundle\Utils\Pokemon;
 use PokePHP\PokeApi;
+use PokeRestBundle\Utils\Pokemon;
 use Predis\Client;
 
 class PokeService
@@ -67,8 +67,8 @@ class PokeService
 
         // get tweets with the safe filter, disabled by default...
         $tweeterParams = [
-            'q' => '#' . $name . ' filter:safe',
-            'count' => $count
+            'q' => '#'.$name.' filter:safe',
+            'count' => $count,
         ];
 
         /** @var Response $search */
@@ -78,72 +78,8 @@ class PokeService
                 $tweetIDs[] = $status['id_str'];
             }
         }
+
         return $tweetIDs;
-    }
-
-    /**
-     * Returns Pokemon's stats then all types stats
-     *
-     * @param Pokemon $pokemon
-     * @return array
-     */
-    public function getCompareStats(Pokemon $pokemon)
-    {
-        $fullStats[] = [
-            'label' => ucfirst($pokemon->getName()),
-            'borderColor' => $this->hexToRgbaColor('#0000FF', 0.6),
-            'backgroundColor' => $this->hexToRgbaColor('#0000FF', 0.1),
-            'pointHoverBackgroundColor' => $this->hexToRgbaColor('#0000FF', 0.6),
-            'data' => array_values($pokemon->getStats())
-        ];
-
-        $this->redis->select($this->pokeParams['redis.databases']['types']);
-
-        $typesColors = $this->pokeParams['types']['colors'];
-        // limit types comparaison to pokemon's types
-        $relatedTypes = $pokemon->getTypes();
-
-        // get all types
-        $typeNames = $this->redis->keys('*');
-        foreach ($typeNames as $typeName) {
-            $typeStats = $this->redis->hgetall($typeName);
-            $typeStatsClean = [];
-            foreach ($typeStats as $stateName => $statValue) {
-                if ($stateName == 'total') {
-                    continue;
-                }
-                $typeStatsClean[] = (int)$statValue;
-            }
-
-            $fullStats[] = [
-                'label' => ucfirst($typeName),
-                'hidden' => in_array($typeName, $relatedTypes) ? false : true,
-                'borderColor' => $this->hexToRgbaColor($typesColors[$typeName], 0.4),
-                'backgroundColor' => $this->hexToRgbaColor($typesColors[$typeName], 0.2),
-                'pointHoverBackgroundColor' => $this->hexToRgbaColor($typesColors[$typeName], 0.6),
-                'data' => $typeStatsClean
-            ];
-        }
-        return $fullStats;
-    }
-
-    /**
-     * Convert and Hex color to an rgba color
-     *
-     * @param string $hex Hex value of the color (eg. #FF0000)
-     * @param float $rgbaOpacity Wanted rgba opacity
-     * @return string rgba value
-     */
-    private function hexToRgbaColor($hex, $rgbaOpacity = 0.2)
-    {
-        $hex = str_replace('#', '', $hex);
-        $hexParts = str_split($hex, 2);
-        $rgba = [];
-        foreach ($hexParts as $hexPart) {
-            $rgba[] = hexdec($hexPart);
-        }
-        $rgba[] = $rgbaOpacity;
-        return 'rgba(' . implode(',', $rgba) . ')';
     }
 
     /**
@@ -154,6 +90,7 @@ class PokeService
     public function getRandomPokemon()
     {
         $rndID = $this->redis->randomkey();
+
         return $this->getPokemonData(
             $this->getPokemonIdFromName($rndID)
         );
@@ -170,10 +107,11 @@ class PokeService
     {
         $payload = json_decode($this->api->pokemon($pokemonID), true);
         if (!is_array($payload)) {
-            throw new \Exception('PokeAPI returns the following error: ' . $payload);
+            throw new \Exception('PokeAPI returns the following error: '.$payload);
         }
         /** @var Pokemon $pokemon */
         $pokemon = new Pokemon($payload);
+
         return $pokemon;
     }
 
@@ -199,9 +137,10 @@ class PokeService
         if (!$this->redis->keys($name)) {
             return false;
         }
+
         return [
             'likes' => $this->redis->hget($name, 'likes'),
-            'dislikes' => $this->redis->hget($name, 'dislikes')
+            'dislikes' => $this->redis->hget($name, 'dislikes'),
         ];
     }
 
@@ -215,11 +154,12 @@ class PokeService
      */
     public function search($pattern)
     {
-        $search = $this->redis->keys($pattern . '*');
+        $search = $this->redis->keys($pattern.'*');
+
         return [
             'pattern' => $pattern,
             'count' => count($search),
-            'results' => $search
+            'results' => $search,
         ];
     }
 
@@ -234,6 +174,7 @@ class PokeService
         if (!$this->redis->keys($name)) {
             return false;
         }
+
         return $this->redis->hincrby($name, 'likes', 1);
     }
 
@@ -248,6 +189,7 @@ class PokeService
         if (!$this->redis->keys($name)) {
             return false;
         }
+
         return $this->redis->hincrby($name, 'dislikes', 1);
     }
 
@@ -264,6 +206,7 @@ class PokeService
         foreach ($typeNames as $typeName) {
             $typeStats[$typeName] = $this->redis->hgetall($typeName);
         }
+
         return $typeStats;
     }
 }
