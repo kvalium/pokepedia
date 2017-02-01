@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Pokepedia: {{ pokemon.name|humanize }}
+{% endblock %}
+
+{% block content %}
+    <h1>Pokepedia entry #{{ pokemon.ID }}: {{ pokemon.name|humanize }}</h1>
+
+    {# Types #}
+    {% if pokemon.types is defined and pokemon.types is not empty %}
+        <div>
+            {% for type in pokemon.types %}
+                <span class="label {{ type }}-type">{{ type|humanize }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Sprites #}
+    {% include '@PokeCli/parts/sprites.html.twig' with {'sprites': pokemon.sprites} only %}
+
+    {#Base Stats#}
+    {% include '@PokeCli/parts/base_stats.html.twig' with {'pokemon': pokemon, 'stats': pokemon.stats} only %}
+
+    {#Pokemon stat charts#}
+    {% include '@PokeCli/parts/stat_chart.html.twig' with {
+        'name': pokemon.name,
+        'statNames': pokemon.stats,
+        'chartData': compareStats
+    } only %}
+
+
+    {#Pokemon Twitter Timeline#}
+    {% include '@PokeCli/parts/twitter_timeline.html.twig' with {'name': pokemon.name} only %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/vendor/chart.js/dist/Chart.js') }}"></script>
+    <script src="{{ asset('bundles/pokecli/js/pokemon_twitter.js') }}"></script>
+{% endblock %}

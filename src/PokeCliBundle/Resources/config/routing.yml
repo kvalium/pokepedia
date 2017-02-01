@@ -1,0 +1,5 @@
+poke_homepage:
+    path:     /
+    type:     annotations
+    resource: PokeCliBundle\Controller\CliController
+

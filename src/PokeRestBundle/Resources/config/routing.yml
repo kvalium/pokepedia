@@ -1,0 +1,5 @@
+poke_rest:
+    path: /api/
+    type:     rest
+    resource: PokeRestBundle\Controller\RestController
+

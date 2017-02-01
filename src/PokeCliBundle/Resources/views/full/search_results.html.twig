@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Welcome!
+{% endblock %}
+
+{% block content %}
+
+    {% set nbResults = results.count %}
+    <h1>
+        {% transchoice nbResults %}
+        {0} No results!|{1} One result|]1,Inf[ %nbResults% results
+        {% endtranschoice %}
+    </h1>
+
+
+    {% if results.results is not empty %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+            </thead>
+        {% for result in results.results %}
+            <tr>
+                <td><a href="{{ path('pokemon_details', {'name': result}) }}">{{ result|humanize }}</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}
