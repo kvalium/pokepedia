@@ -4,6 +4,16 @@
 {% endblock %}
 
 {% block content %}
-<h1>{% trans %}Search a Pokemon!{% endtrans %}</h1>
-    {{ render(controller('PokeCliBundle:Cli:renderSearchForm' )) }}
+    <div class="text-center">
+
+        <img class="pokemon-logo" src="{{ asset('bundles/pokecli/images/pokemon_logo.png') }}">
+
+        <div class="index-form">
+        <h1>{% trans %}Search for a Pokémon!{% endtrans %}</h1>
+
+        {{ render(controller('PokeCliBundle:Cli:renderSearchForm' )) }}
+
+            <p>or <a href="{{ path('get_random_pokemon') }}">choose a random Pokémon!</a></p>
+        </div>
+    </div>
 {% endblock %}

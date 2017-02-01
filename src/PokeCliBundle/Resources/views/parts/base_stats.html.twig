@@ -2,7 +2,7 @@
     {% if pokemon is defined and pokemon is not empty %}
         <div class="col-md-6">
             <h2>Data</h2>
-            <table class="table table-striped">
+            <table class="table">
                 <tr>
                     <td>{% trans %}Pokedex #{% endtrans %}</td>
                     <td>{{ pokemon.iD }}</td>
@@ -26,7 +26,7 @@
     {% if stats is defined and stats is not empty %}
         <div class="col-md-6">
             <h2>{% trans %}Stats{% endtrans %}</h2>
-            <table class="table table-striped">
+            <table class="table">
                 {% for statName, statVal in stats %}
                     <tr>
                         <td>{{ statName|humanize|trans }}</td>

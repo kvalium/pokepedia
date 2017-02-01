@@ -1,6 +1,101 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand:400,700');
+
+/**
+OVERRIDE
+ */
+h1, h2{
+    font-family: 'Quicksand', sans-serif;
+}
+
+h1{
+    font-size: 45px;
+}
+
+html{
+    background: linear-gradient(#8EDDF5, #F9F6F3 30%);
+    font-size: 10px;
+    min-height: 100%;
+}
+
+body{
+    background: transparent;
+}
+
+/**
+HEADER
+ */
+#navbar form{
+    float: right;
+    margin-top: 10px;
+}
+#navbar form div{
+    display: inline-block;
+}
+
+/**
+INDEX PAGE
+ */
+.index-form{
+    margin-top: 90px;
+}
+.index-form h1{
+    margin-bottom:20px;
+}
+.index-form button{
+    display: none;
+}
+.index-form input{
+    font-size:25px;
+}
+.pokemon-logo {
+    max-width: 50%;
+}
+
+/**
+DETAILS PAGE
+ */
+.comparison-chart{
+    margin: 10px 0 30px;
+}
 .normal-type{ background-color: #A8A878; }
 .fire-type{ background-color: #F08030; }
 .fighting-type{ background-color: #C03028; }
 .water-type{ background-color: #6890F0; }
 .poison-type{ background-color: #A040A0; }
 .grass-type{ background-color: #78C850; }
+.flying-type{ background-color: #A890F0; }
+.electric-type{ background-color: #F8D030; }
+.ground-type{ background-color: #E0C068; }
+.psychic-type{ background-color: #F85888; }
+.rock-type{ background-color: #B8A038; }
+.ice-type{ background-color: #98D8D8; }
+.bug-type{ background-color: #A8B820; }
+.dragon-type{ background-color: #7038F8; }
+.ghost-type{ background-color: #705898; }
+.dark-type{ background-color: #705848; }
+.steel-type{ background-color: #B8B8D0; }
+.fairy-type{ background-color: #EE99AC; }
+
+/**
+TWITTER TIMELINE
+ */
+@media (min-width: 768px) {
+    .pokemonTimeline {
+        -moz-column-count: 2;
+        -webkit-column-count: 2;
+        column-count: 2;
+        -moz-column-gap: 1em;
+        -webkit-column-gap: 1em;
+        column-gap: 1em;
+    }
+}
+@media (min-width: 992px) {
+    .pokemonTimeline {
+        -moz-column-count: 4;
+        -webkit-column-count: 4;
+        column-count: 4;
+        -moz-column-gap: 1em;
+        -webkit-column-gap: 1em;
+        column-gap: 1em;
+    }
+}

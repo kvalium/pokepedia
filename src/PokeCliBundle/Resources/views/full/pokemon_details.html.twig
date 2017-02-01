@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{% trans %}Pokepedia entry{% endtrans %} #{{ pokemon.ID }}: {{ pokemon.name|humanize }}</h1>
+    <h1>{% trans %}Pokepedia entry{% endtrans %} #{{ pokemon.iD }}: {{ pokemon.name|humanize }}</h1>
 
     {# Types #}
     {% if pokemon.types is defined and pokemon.types is not empty %}
@@ -22,15 +22,18 @@
     {% include '@PokeCli/parts/base_stats.html.twig' with {'pokemon': pokemon, 'stats': pokemon.stats} only %}
 
     {#Pokemon stat charts#}
-    {% include '@PokeCli/parts/stat_chart.html.twig' with {
-        'name': pokemon.name|humanize,
-        'statNames': pokemon.stats,
-        'chartData': compareStats
-    } only %}
-
+    <div class="comparison-chart">
+        {% include '@PokeCli/parts/stat_chart.html.twig' with {
+            'name': pokemon.name|humanize,
+            'statNames': pokemon.stats,
+            'chartData': compareStats
+        } only %}
+    </div>
 
     {#Pokemon Twitter Timeline#}
-    {% include '@PokeCli/parts/twitter_timeline.html.twig' with {'name': pokemon.name} only %}
+    <div class="twitter-timeline">
+        {% include '@PokeCli/parts/twitter_timeline.html.twig' with {'name': pokemon.name} only %}
+    </div>
 
 {% endblock %}
 

@@ -46,7 +46,7 @@ class CliController extends Controller
             /** @var Form $form */
             $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('search_handler'))
-                ->add('name', SearchType::class, ['required' => false, 'trim' => true])
+                ->add('name', SearchType::class, ['required' => false, 'trim' => true, 'label' => false])
                 ->add('send', SubmitType::class, ['label' => 'Search'])
                 ->getForm();
 

@@ -35,7 +35,7 @@ $(document).ready(function () {
 
 function addTweet(i, tweetID)
 {
-    $(pokeContainer).append('<div id="' + tweetID + '" class="col-md-3"></div>');
+    $(pokeContainer).append('<div id="' + tweetID + '"></div>');
     twttr.widgets.createTweet(
         tweetID.toString(),
         document.getElementById(tweetID));
