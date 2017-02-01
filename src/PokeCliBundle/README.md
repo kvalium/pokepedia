@@ -1,4 +1,4 @@
-# PokeRestBundle
+# PokeCliBundle
 
 This bundle is a front-end implementation of the [PokeRestBundle](/src/PokeRestBundle/README.md).
 
